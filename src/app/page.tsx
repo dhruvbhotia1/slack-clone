@@ -13,6 +13,7 @@ export default function Home() {
     const [open, setOpen] = useCreateWorkspaceModal();
 
     const {signOut} = useAuthActions();
+
     const {data, isLoading} = useGetWorkspaces();
 
     const router = useRouter();
@@ -38,10 +39,12 @@ export default function Home() {
 
 
   return (
+
     <div>
       this is home
 
         <UserButton/>
     </div>
+
   );
 }
