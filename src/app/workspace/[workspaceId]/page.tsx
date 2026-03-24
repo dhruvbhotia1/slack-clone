@@ -10,10 +10,12 @@ const Page =  () => {
     const {data} = useGetWorkspace({id: workspaceId});
 
 
+
+
     return (
 
-        <div>
-            ID: { JSON.stringify(data)};
+        <div className={"text-black font-semibold"}>
+            ID: { JSON.stringify(data?._id, null, 2) };
         </div>
     )
 

@@ -3,6 +3,12 @@
 import React from 'react';
 import {Toolbar} from "@/app/workspace/[workspaceId]/toolbar";
 import {Sidebar} from "./sidebar";
+import {
+    ResizableHandle,
+    ResizablePanel,
+    ResizablePanelGroup,
+} from "@/components/ui/resizable"
+import {WorkspaceSidebar} from "@/app/workspace/[workspaceId]/workspace-sidebar";
 
 interface Props {
 
@@ -13,15 +19,31 @@ export default function Layout({children} : Props) {
 
     return (
 
-        <div className={"h-full bg-red-500"}>
+        <div className={"h-full"}>
 
             <Toolbar/>
 
-            <div className={"h-[calc(100vh-40px)]"}>
+            <div className={"flex h-[calc(100vh-40px)]"}>
 
                 <Sidebar/>
 
-                {children}
+                <ResizablePanelGroup orientation={'horizontal'}>
+
+                    <ResizablePanel defaultSize={300} minSize={110} className={'bg-[#5e2c5f]'}>
+
+                        <WorkspaceSidebar/>
+
+                    </ResizablePanel>
+
+                    <ResizableHandle withHandle/>
+
+                    <ResizablePanel minSize={300}>
+                        {children}
+                    </ResizablePanel>
+
+                </ResizablePanelGroup>
+
+
 
             </div>
 
