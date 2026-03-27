@@ -5,7 +5,7 @@ import {Separator} from "@/components/ui/separator";
 import {FcGoogle} from "react-icons/fc";
 import {FaGithub} from "react-icons/fa6";
 import {SignInFlow} from "@/features/auth/types";
-import {useState} from "react";
+import {SubmitEventHandler, useState} from "react";
 import {useAuthActions} from "@convex-dev/auth/react";
 import {TriangleAlert} from "lucide-react";
 import React from "react";
@@ -27,7 +27,7 @@ export const SignUpCard = ({setState} : Props) => {
     const [pending, setPending] = useState(false);
     const [error, setError] = useState("");
 
-    const handlePasswordSignIn = (e : React.FormEvent<HTMLFormElement>) => {
+    const handlePasswordSignIn: SubmitEventHandler<HTMLFormElement> = (e) => {
 
         e.preventDefault();
 

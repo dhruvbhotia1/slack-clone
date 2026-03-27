@@ -5,7 +5,7 @@ import {Separator} from "@/components/ui/separator";
 import {FcGoogle} from "react-icons/fc";
 import {FaGithub} from "react-icons/fa6";
 import {SignInFlow} from "@/features/auth/types";
-import {useState} from "react";
+import {SubmitEventHandler, useState} from "react";
 import {useAuthActions} from "@convex-dev/auth/react";
 import {TriangleAlert} from "lucide-react";
 
@@ -21,7 +21,7 @@ export const SignInCard = ({setState} : Props) => {
     const [error, setError] = useState("");
 
 
-    const handlePasswordSignIn = (e : React.FormEvent<HTMLFormElement>) => {
+    const handlePasswordSignIn: SubmitEventHandler<HTMLFormElement> = (e ) => {
 
         e.preventDefault();
         setPending(true);
@@ -63,7 +63,8 @@ export const SignInCard = ({setState} : Props) => {
                 !!error && (
 
                         <div className={"bg-destructive p-3 rounded-md flex items-center gap-x-2 text-sm  mb-6 text-white font-semibold"}>
-                            <TriangleAlert className={"size-5"}/>
+                            <TriangleAlert className={"size-5" +
+                                ""}/>
                             <p className={""}>{error}</p>
                         </div>
 

@@ -3,10 +3,17 @@ import {Avatar, AvatarImage, AvatarFallback} from "@/components/ui/avatar";
 import {useCurrentUser} from "@/features/auth/api/use-current-user";
 import {Loader, LogOut} from "lucide-react";
 import {useAuthActions} from "@convex-dev/auth/react";
+import {useRouter} from "next/navigation";
 
 export const UserButton = () => {
 
-    const {signOut} = useAuthActions();
+    const {signOut} = useAuthActions()
+    const router = useRouter();
+
+    const SignOut = () => {
+        signOut();
+        router.replace("/auth");
+    }
 
     const {data, isLoading} = useCurrentUser();
 
@@ -36,7 +43,7 @@ export const UserButton = () => {
                 <Avatar className={'size-10 hover:opacity-75 transition'}>
 
                     <AvatarImage alt={name} src={image}/>
-                    <AvatarFallback className={"font-semibold"}>
+                    <AvatarFallback className={"bg-sky-700 text-white font-semibold rounded-md"}>
 
                         {avatarFallback}
 
@@ -47,7 +54,7 @@ export const UserButton = () => {
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align={'center'} side={'right'} className={'w-60'}>
-                <DropdownMenuItem onClick={() => {signOut()}}>
+                <DropdownMenuItem onClick={() => SignOut()}>
 
                     <LogOut className={"size-4 nmr-2"}/>
                     Logout
