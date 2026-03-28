@@ -1,14 +1,14 @@
 'use client';
 
 import React from 'react';
-import {Toolbar} from "@/app/workspace/[workspaceId]/toolbar";
-import {Sidebar} from "./sidebar";
+import {Toolbar} from "@/app/workspace/[workspaceId]/components/toolbar";
+import {Sidebar} from "./components/sidebar";
 import {
     ResizableHandle,
     ResizablePanel,
     ResizablePanelGroup,
 } from "@/components/ui/resizable"
-import {WorkspaceSidebar} from "@/app/workspace/[workspaceId]/workspace-sidebar";
+import {WorkspaceSidebar} from "@/app/workspace/[workspaceId]/components/workspace-sidebar";
 
 interface Props {
 
