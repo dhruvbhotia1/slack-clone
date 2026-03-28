@@ -6,12 +6,12 @@ import {
     DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
-import {Doc} from "../../../../convex/_generated/dataModel";
+import {Doc} from "../../../../../convex/_generated/dataModel";
 import {ChevronDown, ListFilter, SquarePen} from "lucide-react";
 import {Hint} from "@/components/hint"
-import {PreferencesModal} from "@/app/workspace/[workspaceId]/preferences-modal";
+import {PreferencesModal} from "@/app/workspace/[workspaceId]/components/preferences-modal";
 import {useState} from "react";
-import {InviteModal} from "@/app/workspace/[workspaceId]/invite-modal";
+import {InviteModal} from "@/app/workspace/[workspaceId]/components/invite-modal";
 
 interface Props {
 

@@ -1,4 +1,4 @@
-import {Id} from "../../../../convex/_generated/dataModel";
+import {Id} from "../../../../../convex/_generated/dataModel";
 import {LucideIcon} from "lucide-react";
 import {IconType} from "react-icons";
 import { buttonVariants} from "@/components/ui/button";
@@ -39,7 +39,7 @@ export const SidebarItem = ({label, id, icon: Icon, variant,}: Props) => {
 
     return (
         <div className={cn(sidebarItemVariants({variant: variant}), "flex justify-start gap-y-2 rounded-md")}>
-            <Link href={`/workspaces/${workspaceId}/channel/${id}`} className={"flex gap-x-2 items-center justify-center"}>
+            <Link href={`/workspace/${workspaceId}/channel/${id}`} className={"flex gap-x-2 items-center justify-center"}>
 
                 <Icon className={'size-4'}/>
 

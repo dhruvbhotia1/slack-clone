@@ -1,4 +1,4 @@
-import {Id} from "../../../../convex/_generated/dataModel";
+import {Id} from "../../../../../convex/_generated/dataModel";
 import {Button} from "@/components/ui/button";
 import {cva, type VariantProps} from "class-variance-authority";
 import {cn} from "@/lib/utils";

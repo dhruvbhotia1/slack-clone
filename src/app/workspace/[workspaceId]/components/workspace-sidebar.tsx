@@ -5,9 +5,9 @@ import {AlertTriangle, HashIcon, Loader, MessageSquareText, SendHorizontal} from
 import {WorkspaceHeader} from "./workspace-header";
 import {SidebarItem} from "./sidebar-item";
 import {useGetChannels} from "@/features/channels/api/use-get-channels";
-import {WorkspaceSection} from "@/app/workspace/[workspaceId]/workspace-section";
+import {WorkspaceSection} from "@/app/workspace/[workspaceId]/components/workspace-section";
 import {useGetMembers} from "@/features/members/api/use-get-members";
-import {UserButton} from "@/app/workspace/[workspaceId]/user-button";
+import {UserButton} from "@/app/workspace/[workspaceId]/components/user-button";
 import {useCreateChannelModal} from "@/features/channels/store/use-create-channel-modal";
 
 

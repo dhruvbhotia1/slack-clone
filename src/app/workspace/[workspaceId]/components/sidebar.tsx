@@ -1,6 +1,6 @@
 import {UserButton} from "@/features/auth/components/user-button";
-import {WorkspaceSwitcher} from "@/app/workspace/[workspaceId]/workspace-switcher";
-import {SidebarButton} from "@/app/workspace/[workspaceId]/sidebar-button";
+import {WorkspaceSwitcher} from "@/app/workspace/[workspaceId]/components/workspace-switcher";
+import {SidebarButton} from "@/app/workspace/[workspaceId]/components/sidebar-button";
 import {BellIcon, Home, MessagesSquareIcon, MoreHorizontalIcon} from "lucide-react";
 import {usePathname} from "next/navigation";
 

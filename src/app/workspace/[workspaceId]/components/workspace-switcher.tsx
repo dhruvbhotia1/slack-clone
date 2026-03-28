@@ -5,7 +5,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {Button} from "@/components/ui/button"
+import {Button, buttonVariants} from "@/components/ui/button"
 import {useWorkspaceId} from "@/hooks/use-workspace-id";
 import {useGetWorkspace} from "@/features/workspaces/api/use-get-workspace";
 import {useGetWorkspaces} from "@/features/workspaces/api/use-get-workspaces";
@@ -13,6 +13,7 @@ import {useCreateWorkspaceModal} from "@/features/workspaces/store/use-create-wo
 import {Loader} from "lucide-react";
 import {useRouter} from "next/navigation";
 import {Plus} from "lucide-react"
+import {cn} from "@/lib/utils";
 
 export const WorkspaceSwitcher = () => {
 
@@ -36,20 +37,16 @@ export const WorkspaceSwitcher = () => {
 
         <DropdownMenu >
 
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger className={cn(buttonVariants({variant: "default"}), "size-9 relative overflow-hidden bg-[#ABABAD] hover:bg-[#ABABAD]/80 text-slate-800 font-semibold text-xl")}>
 
-                <Button className={"size-9 relative overflow-hidden bg-[#ABABAD] hover:bg-[#ABABAD]/80 text-slate-800 font-semibold text-xl"}>
+                {workspaceLoading ? (
+                    <>
+                        <Loader className={"size-5 animate-spin shrink-0"}/>
+                    </>
+                ) : (
 
-                    {workspaceLoading ? (
-                        <>
-                            <Loader className={"size-5 animate-spin shrink-0"}/>
-                        </>
-                    ) : (
-
-                        workspace?.name.charAt(0).toUpperCase()
-                    )}
-
-                </Button>
+                    workspace?.name.charAt(0).toUpperCase()
+                )}
 
             </DropdownMenuTrigger>
 
@@ -69,7 +66,7 @@ export const WorkspaceSwitcher = () => {
 
                 {
                     filteredWorkspace?.map((workspace) => (
-                        <>
+
                             <DropdownMenuItem key={workspace._id} className={"cursor-pointer capitalize overflow-hidden"} onClick={() => router.push(`/workspace/${workspace._id}`)}>
 
                                 <div className={"shrink-0 size-9 relative overflow-hidden bg-[#616061] text-white font-semibold text-lg rounded-md flex items-center justify-center mr-2"}>
@@ -79,7 +76,7 @@ export const WorkspaceSwitcher = () => {
                                 <p className={"truncate"}>{workspace.name}</p>
 
                             </DropdownMenuItem>
-                        </>
+                        
                     ))
                 }
 

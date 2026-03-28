@@ -12,6 +12,7 @@ import {useGetWorkspaceInfo} from "@/features/workspaces/api/use-get-workspace-i
 import {Loader} from "lucide-react"
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
+import {useEffect, useMemo} from "react";
 
 const Page = () => {
 
@@ -21,7 +22,6 @@ const Page = () => {
     const {data, isLoading} = useGetWorkspaceInfo({id: workspaceId});
 
     const router = useRouter();
-
 
     const {mutate, isPending} = useJoin();
 
@@ -47,6 +47,14 @@ const Page = () => {
 
 
     }
+
+    const isMember = useMemo(() => data?.isMember, [data?.isMember]);
+
+    useEffect(() => {
+        if(isMember) {
+            router.push(`/workspace/${workspaceId}`);
+        }
+    }, [isMember, router, workspaceId]);
 
 
     if(isLoading) {
