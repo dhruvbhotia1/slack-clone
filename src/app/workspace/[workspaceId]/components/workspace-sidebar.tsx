@@ -9,11 +9,14 @@ import {WorkspaceSection} from "@/app/workspace/[workspaceId]/components/workspa
 import {useGetMembers} from "@/features/members/api/use-get-members";
 import {UserButton} from "@/app/workspace/[workspaceId]/components/user-button";
 import {useCreateChannelModal} from "@/features/channels/store/use-create-channel-modal";
+import {useChannelId} from "@/hooks/use-channel-id";
 
 
 export const WorkspaceSidebar = () => {
 
-    const workspaceId = useWorkspaceId()
+    const workspaceId = useWorkspaceId();
+
+    const channelId = useChannelId();
 
     const {data: member, isLoading: memberLoading} = useCurrentMember({workspaceId});
 
@@ -68,7 +71,7 @@ export const WorkspaceSidebar = () => {
 
             <WorkspaceSection label={"Channels"} hint={"New Channel"} onNew={member.role === "admin" ? () => setOpen(true) : undefined}>
                 {channels?.map((item) => (
-                    <SidebarItem key={item._id} label={item.name} icon={HashIcon} id={item._id} variant={"default"}/>
+                    <SidebarItem key={item._id} label={item.name} icon={HashIcon} id={item._id} variant={channelId === item._id ? "active" : "default"}/>
                 ))}
             </WorkspaceSection>
 
