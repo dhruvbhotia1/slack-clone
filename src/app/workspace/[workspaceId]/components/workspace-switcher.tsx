@@ -52,7 +52,7 @@ export const WorkspaceSwitcher = () => {
 
             <DropdownMenuContent side={"bottom"} align={"start"} className={"w-64"}>
 
-                <DropdownMenuItem className={"cursor-pointer flex-col justify-center items-start capitalize"} onClick={() => router.push(`/workspaces/${workspaceId}`)}>
+                <DropdownMenuItem className={"cursor-pointer flex-col justify-center items-start capitalize"} onClick={() => router.push(`/workspace/${workspaceId}`)}>
 
                     {workspace?.name}
 
