@@ -8,6 +8,7 @@ import {MdSend} from "react-icons/md";
 import {Hint} from "@/components/hint";
 import {useLayoutEffect} from "react";
 import {Delta, Op} from "quill/core";
+import {cn} from "@/lib/utils";
 
 
 
@@ -51,6 +52,7 @@ const Editor = ({variant = "create", onCancel, onSubmit, placeholder="Write some
     const quillRef = useRef<Quill | null>(null);
 
     const [text, setText] = useState("");
+    const [isToolbarVisible, setIsToolbarVisible] = useState(false);
 
     useLayoutEffect(() => {
 
@@ -81,6 +83,35 @@ const Editor = ({variant = "create", onCancel, onSubmit, placeholder="Write some
 
             theme: "snow",
             placeholder: placeholderRef.current,
+            modules: {
+
+                toolbar: [
+                    ["bold", "italic", "underline", "strike",],
+                    ["link"],
+                    [{list: "ordered"}, {list: "bullet"}]
+                ],
+                keyboard: {
+                    bindings: {
+                        enter: {
+                            key: "Enter",
+                            handler: () => {
+
+                                // submit the message to send
+
+                                return;
+                            }
+                        },
+                        shift_enter: {
+
+                            key: "Enter",
+                            shiftKey: true,
+                            handler: () => {
+                                quill.insertText(quill.getSelection()?.index || 0, "\n");
+                            }
+                        }
+                    }
+                }
+            }
 
 
         }
@@ -100,13 +131,40 @@ const Editor = ({variant = "create", onCancel, onSubmit, placeholder="Write some
 
         return () => {
 
+            quill.off(Quill.events.TEXT_CHANGE)
+
             if(container) {
 
                 container.innerHTML = "";
             }
+
+            if(quillRef.current) {
+
+                quillRef.current = null;
+            }
+
+            if(innerRef) {
+                innerRef.current = null;
+            }
         }
 
-    }, [])
+    }, [innerRef])
+
+
+
+    const isEmpty = text.replace(/<(.|\n)*?>/g, "").trim().length === 0;
+
+    const toggleToolbar = () => {
+
+        setIsToolbarVisible((current) => !current );
+
+        const toolbarElement = containerRef?.current?.querySelector(".ql-toolbar");
+
+        if(toolbarElement) {
+
+            toolbarElement.classList.toggle("hidden");
+        }
+    }
 
 
 
@@ -119,22 +177,22 @@ const Editor = ({variant = "create", onCancel, onSubmit, placeholder="Write some
 
                 <div ref={containerRef} className={"h-full ql-custom"}/>
 
-                <div className={"flex px-2 pb-2 z-5"}>
+                <div className={"flex px-2 pb-2 z-5 gap-x-3"}>
 
-                    <Hint label={"Hide formatting"}>
+                    <Hint label={isToolbarVisible ? "Show Formatting" : "Hide Formatting"}>
 
-                        <div>
-                            <Button disabled={false} size={"iconSm"} variant={"ghost"} onClick={() => {}}>
+                            <Button asChild disabled={disabled} size={"iconSm"} variant={"ghost"} onClick={toggleToolbar} className={"h-6 w-6"}>
                                 <PiTextAa className={"size-4"}/>
                             </Button>
-                        </div>
 
                     </Hint>
 
                    <Hint label={"Emojis"}>
-                       <Button disabled={false} size={"iconSm"} variant={"ghost"} onClick={() => {}}>
+
+                       <Button asChild disabled={disabled} size={"iconSm"} variant={"ghost"} onClick={() => {}} className={"h-6 w-6"}>
                            <Smile className={"size-4"}/>
                        </Button>
+
                    </Hint>
 
                     {
@@ -144,11 +202,11 @@ const Editor = ({variant = "create", onCancel, onSubmit, placeholder="Write some
 
                            <Hint label={"Image"}>
 
-                               <div>
-                                   <Button disabled={false} size={"iconSm"} variant={"ghost"} onClick={() => {}}>
+
+                                   <Button asChild disabled={disabled} size={"iconSm"} variant={"ghost"} onClick={() => {}} className={"h-6 w-6"}>
                                        <ImageIcon className={"size-4"}/>
                                    </Button>
-                               </div>
+
 
                            </Hint>
                         )
@@ -177,7 +235,7 @@ const Editor = ({variant = "create", onCancel, onSubmit, placeholder="Write some
                     {
                         variant === "create" && (
 
-                            <Button className={"ml-auto bg-[#007a5a] hover:bg-[#007a5a] text-white "} disabled={false} onClick={() => {}}>
+                            <Button className={cn("ml-auto", isEmpty ?  "bg-[#007a5a] hover:bg-[#007a5a] text-white" : "bg-white hover:bg-white text-muted-foreground")} disabled={disabled || isEmpty} onClick={() => {}}>
 
                                 <MdSend className={"size-4 "}/>
 
@@ -186,7 +244,6 @@ const Editor = ({variant = "create", onCancel, onSubmit, placeholder="Write some
                     }
 
                 </div>
-
 
             </div>
 
