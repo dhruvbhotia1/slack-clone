@@ -18,7 +18,7 @@ const Page = () => {
 
             <div className={"h-full flex-1 flex items-center justify-center "}>
 
-                <Loader className={"size-5 animate-spin text-muted-foregorund"}/>
+                <Loader className={"size-5 animate-spin text-muted-foreground"}/>
 
 
             </div>
@@ -33,7 +33,7 @@ const Page = () => {
 
             <div className={"h-full flex-1 flex flex-col gap-y-2 items-center justify-center "}>
 
-                <TriangleAlert className={"size-6 animate-pulse text-muted-foregorund"}/>
+                <TriangleAlert className={"size-6 animate-pulse text-muted-foreground"}/>
 
                 <span className={"text-sm text-muted-foreground"}>
 
@@ -54,7 +54,7 @@ const Page = () => {
 
             <div className={"flex-1"}/>
 
-            <ChatInput/>
+            <ChatInput placeholder={`Message #${channel.name}`}/>
         </div>
     )
 }

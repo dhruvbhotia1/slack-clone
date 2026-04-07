@@ -1,6 +1,6 @@
 import React from "react";
 
-import {Button} from "@/components/ui/button";
+import {Button, buttonVariants} from "@/components/ui/button";
 import { FaCaretRight} from "react-icons/fa";
 import {Hint} from "@/components/hint";
 import {PlusIcon} from "lucide-react";
@@ -46,11 +46,11 @@ export const WorkspaceSection = ({children, label, hint, onNew}: Props) => {
                     onNew && (
                         <Hint label={hint} side={'top'} align={'center'}>
 
-                            <Button onClick={onNew} variant={"transparent"} size={'iconSm'} className={"opacity-0 group-hover:opacity-100 transition-opacity ml-auto p-0.5 text-sm text-white size-6 shrink-0"}>
+                            <div onClick={onNew} className={cn(buttonVariants({variant: "transparent", size: "iconSm"}), "opacity-0 group-hover:opacity-100 transition-opacity ml-auto p-0.5 text-sm text-white size-6 shrink-0")}>
 
                                 <PlusIcon className={"size-5"}/>
 
-                            </Button>
+                            </div>
 
 
                         </Hint>

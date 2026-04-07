@@ -5,13 +5,14 @@ import {
     DropdownMenuItem,
     DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
-import {Button} from "@/components/ui/button";
+import {Button, buttonVariants} from "@/components/ui/button";
 import {Doc} from "../../../../../convex/_generated/dataModel";
 import {ChevronDown, ListFilter, SquarePen} from "lucide-react";
 import {Hint} from "@/components/hint"
 import {PreferencesModal} from "@/app/workspace/[workspaceId]/components/preferences-modal";
 import {useState} from "react";
 import {InviteModal} from "@/app/workspace/[workspaceId]/components/invite-modal";
+import {cn} from "@/lib/utils";
 
 interface Props {
 
@@ -39,15 +40,12 @@ export const WorkspaceHeader = ({workspace, isAdmin}: Props) => {
             <div className={"flex items-center justify-between px-4 h-12.25 gap-0.5"}>
 
                 <DropdownMenu>
-                    <DropdownMenuTrigger>
+                    <DropdownMenuTrigger className={cn(buttonVariants({variant: "transparent", size: "sm"}), "font-semibold text-lg w-auto p-1.5 overflow-hidden")}>
 
-                        <Button variant={"transparent"} className={"font-semibold text-lg w-auto p-1.5 overflow-hidden"} size={'sm'}>
 
-                            <span className={"truncate"}>{workspace?.name}</span>
+                        <span className={"truncate"}>{workspace?.name}</span>
 
-                            <ChevronDown className={"size-4 ml-1 shrink-0"}/>
-
-                        </Button>
+                        <ChevronDown className={"size-4 ml-1 shrink-0"}/>
 
                     </DropdownMenuTrigger>
 
@@ -100,21 +98,24 @@ export const WorkspaceHeader = ({workspace, isAdmin}: Props) => {
 
                     <Hint label={"Filter conversations"} side={"bottom"}>
 
-                        <Button variant={'transparent'} size={"iconSm"}>
+                        <div className={cn(buttonVariants({variant: "transparent", size: "iconSm"}), "cursor-pointer")}>
 
                             <ListFilter size={4}/>
 
-                        </Button>
+                        </div>
 
                     </Hint>
 
 
                     <Hint label={"New message"} side={'bottom'}>
-                        <Button variant={'transparent'} size={'iconSm'}>
+
+
+                        <div className={cn(buttonVariants({variant: "transparent", size: "iconSm"}), "cursor-pointer")}>
 
                             <SquarePen size={4}/>
 
-                        </Button>
+                        </div>
+
                     </Hint>
 
                 </div>

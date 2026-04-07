@@ -7,11 +7,9 @@ import {ConvexAuthNextjsServerProvider} from "@convex-dev/auth/nextjs/server"
 import {Modals} from "@/components/modals";
 import {Toaster} from "@/components/ui/sonner";
 import {JotaiProvider} from "@/components/jotai-provider";
+import { cn } from "@/lib/utils";
 
-const geistSans = Geist({
-  variable: "--font-sans",
-  subsets: ["latin"],
-});
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const geistMono = Geist_Mono({
   variable: "--font-mono",
@@ -30,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <ConvexAuthNextjsServerProvider>
-        <html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <html lang="en" className={cn("antialiased", geistMono.variable, "font-sans", geist.variable)}>
         <body>
         <ConvexClientProvider>
 

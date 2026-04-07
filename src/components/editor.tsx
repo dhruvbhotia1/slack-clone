@@ -1,12 +1,12 @@
 import Quill, {type QuillOptions} from 'quill'
 import  "quill/dist/quill.snow.css";
-import {RefObject, useEffect, useRef} from "react";
+import {RefObject, useEffect, useRef, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {PiTextAa} from "react-icons/pi";
 import {ImageIcon, Smile} from "lucide-react";
 import {MdSend} from "react-icons/md";
 import {Hint} from "@/components/hint";
-
+import {useLayoutEffect} from "react";
 import {Delta, Op} from "quill/core";
 
 
@@ -38,9 +38,35 @@ interface Props {
 
 
 
-const Editor = ({variant = "create"}: Props) => {
+const Editor = ({variant = "create", onCancel, onSubmit, placeholder="Write something...", defaultValue = [], innerRef, disabled}: Props) => {
 
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const submitRef = useRef(onSubmit);
+
+    const placeholderRef = useRef(placeholder);
+
+    const defaultValueRef = useRef(defaultValue);
+    const disabledRef = useRef(disabled);
+    const quillRef = useRef<Quill | null>(null);
+
+    const [text, setText] = useState("");
+
+    useLayoutEffect(() => {
+
+
+        submitRef.current = onSubmit;
+
+        placeholderRef.current = placeholder;
+
+        defaultValueRef.current = defaultValue;
+
+        disabledRef.current = disabled;
+
+
+    });
+
+
 
     useEffect(() => {
         if(!containerRef.current) return;
@@ -54,11 +80,23 @@ const Editor = ({variant = "create"}: Props) => {
         const options: QuillOptions = {
 
             theme: "snow",
+            placeholder: placeholderRef.current,
+
 
         }
 
 
         const quill = new Quill(editorContainer, options);
+
+        quillRef.current = quill;
+        quillRef.current.focus();
+
+        if(innerRef) {
+
+            innerRef.current = quill;
+        }
+
+
 
         return () => {
 
@@ -67,6 +105,7 @@ const Editor = ({variant = "create"}: Props) => {
                 container.innerHTML = "";
             }
         }
+
     }, [])
 
 
@@ -84,9 +123,11 @@ const Editor = ({variant = "create"}: Props) => {
 
                     <Hint label={"Hide formatting"}>
 
-                        <Button disabled={false} size={"iconSm"} variant={"ghost"} onClick={() => {}}>
-                            <PiTextAa className={"size-4"}/>
-                        </Button>
+                        <div>
+                            <Button disabled={false} size={"iconSm"} variant={"ghost"} onClick={() => {}}>
+                                <PiTextAa className={"size-4"}/>
+                            </Button>
+                        </div>
 
                     </Hint>
 
@@ -103,9 +144,11 @@ const Editor = ({variant = "create"}: Props) => {
 
                            <Hint label={"Image"}>
 
-                               <Button disabled={false} size={"iconSm"} variant={"ghost"} onClick={() => {}}>
-                                  <ImageIcon className={"size-4"}/>
-                               </Button>
+                               <div>
+                                   <Button disabled={false} size={"iconSm"} variant={"ghost"} onClick={() => {}}>
+                                       <ImageIcon className={"size-4"}/>
+                                   </Button>
+                               </div>
 
                            </Hint>
                         )
@@ -150,7 +193,6 @@ const Editor = ({variant = "create"}: Props) => {
             <div className={"p-3 text-[10px] text-muted-forground flex justify-end"}>
 
                 <p className={"text-md"}><strong>SHIFT + RETURN</strong> to add a new line</p>
-
 
             </div>
 

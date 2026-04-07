@@ -38,7 +38,7 @@ export const SidebarItem = ({label, id, icon: Icon, variant,}: Props) => {
     const workspaceId = useWorkspaceId();
 
     return (
-        <div className={cn(sidebarItemVariants({variant: variant}), "flex justify-start gap-y-2 rounded-md")}>
+        <div className={cn(sidebarItemVariants({variant: variant}), "flex justify-start gap-y-2 rounded-md cursor-pointer")}>
             <Link href={`/workspace/${workspaceId}/channel/${id}`} className={"flex gap-x-2 items-center justify-center"}>
 
                 <Icon className={'size-4'}/>
