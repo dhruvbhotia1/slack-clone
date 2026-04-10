@@ -20,7 +20,7 @@ interface Props {
 export const Hint = ({label, children, side, align}: Props) => {
 
     return (
-        <TooltipProvider delay={50}>
+        <TooltipProvider delayDuration={50}>
             <Tooltip >
 
                 <TooltipTrigger>
@@ -28,10 +28,7 @@ export const Hint = ({label, children, side, align}: Props) => {
                 </TooltipTrigger>
 
                 <TooltipContent side={side} align={align} className={"bg-black text-white border-white/5 "}>
-
                     <p className={"font-medium text-xs"}>{label}</p>
-
-
                 </TooltipContent>
 
             </Tooltip>
