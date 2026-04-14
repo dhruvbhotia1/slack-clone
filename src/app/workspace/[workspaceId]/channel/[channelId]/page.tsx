@@ -1,69 +1,64 @@
 "use client";
 
-import {useChannelId} from "@/hooks/use-channel-id";
-import {useGetChannel} from "@/features/channels/api/use-get-channel";
-import {Loader, TriangleAlert} from "lucide-react";
-import {Header} from "@/app/workspace/[workspaceId]/channel/[channelId]/header";
-import {ChatInput} from "@/app/workspace/[workspaceId]/channel/[channelId]/chat-input";
-import {useGetMessages} from "@/features/messages/api/use-get-messages";
+import { useChannelId } from "@/hooks/use-channel-id";
+import { useGetChannel } from "@/features/channels/api/use-get-channel";
+import { Loader, TriangleAlert } from "lucide-react";
+import { Header } from "@/app/workspace/[workspaceId]/channel/[channelId]/header";
+import { ChatInput } from "@/app/workspace/[workspaceId]/channel/[channelId]/chat-input";
+import { useGetMessages } from "@/features/messages/api/use-get-messages";
+import { MessageList } from "@/components/message-list";
 
 const Page = () => {
+  const channelId = useChannelId();
 
-    const channelId = useChannelId();
+  const { results, status, loadMore } = useGetMessages({ channelId });
 
-    const {results} = useGetMessages({channelId})
+  const { data: channel, isLoading: channelLoading } = useGetChannel({
+    channelId,
+  });
 
-    const {data: channel, isLoading: channelLoading} = useGetChannel({channelId});
-
-    if(channelLoading) {
-
-        return (
-
-            <div className={"h-full flex-1 flex items-center justify-center "}>
-
-                <Loader className={"size-5 animate-spin text-muted-foreground"}/>
-
-
-            </div>
-        )
-
-    }
-
-
-    if(!channel) {
-
-        return (
-
-            <div className={"h-full flex-1 flex flex-col gap-y-2 items-center justify-center "}>
-
-                <TriangleAlert className={"size-6 animate-pulse text-muted-foreground"}/>
-
-                <span className={"text-sm text-muted-foreground"}>
-
-                    Channel not found.
-
-                </span>
-
-            </div>
-
-        )
-    }
-
+  if (channelLoading || status === "LoadingFirstPage") {
     return (
+      <div className={"h-full flex-1 flex items-center justify-center "}>
+        <Loader className={"size-5 animate-spin text-muted-foreground"} />
+      </div>
+    );
+  }
 
-        <div className={"flex flex-col h-full"}>
+  if (!channel) {
+    return (
+      <div
+        className={
+          "h-full flex-1 flex flex-col gap-y-2 items-center justify-center "
+        }
+      >
+        <TriangleAlert
+          className={"size-6 animate-pulse text-muted-foreground"}
+        />
 
-            <Header title={channel?.name}/>
+        <span className={"text-sm text-muted-foreground"}>
+          Channel not found.
+        </span>
+      </div>
+    );
+  }
 
-            <div className={"flex-1"}>
+  return (
+    <div className={"flex flex-col h-full"}>
+      <Header title={channel?.name} />
 
-                {JSON.stringify(results)}
+      <MessageList
+        channelName={channel.name}
+        channelCreationTime={channel._creationTime}
+        data={results}
+        loadMore={loadMore}
+        isLoadingMore={status === "LoadingMore"}
+        canLoadMore={status === "CanLoadMore"}
+      />
 
-            </div>
-
-            <ChatInput placeholder={`Message #${channel.name}`}/>
-        </div>
-    )
-}
+      <ChatInput placeholder={`Message #${channel.name}`} />
+    </div>
+  );
+};
 
 export default Page;
