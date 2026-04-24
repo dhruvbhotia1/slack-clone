@@ -34,7 +34,7 @@ export const Toolbar = ({
             variant="ghost"
             size="iconXs"
             disabled={isPending}
-            onClick={handleReaction}
+            onClick={() => handleReaction}
           >
             <Smile className="size-4" />
           </Button>

@@ -50,7 +50,6 @@ const Page = () => {
       <MessageList
         channelName={channel.name}
         channelCreationTime={channel._creationTime}
-        variant="channel"
         data={results}
         loadMore={loadMore}
         isLoadingMore={status === "LoadingMore"}

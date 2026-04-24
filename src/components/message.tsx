@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import { Id, Doc } from "../../convex/_generated/dataModel";
 import { format, isToday, isYesterday } from "date-fns";
 import { Hint } from "./hint";
-
+import { Button } from "./ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import { Thumbnail } from "./thumbnail";
 import { Toolbar } from "./toolbar";
@@ -12,6 +12,8 @@ import { cn } from "@/lib/utils";
 import { useRemoveMessage } from "@/features/messages/api/use-remove-message";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useToggleReaction } from "@/features/reactions/api/use-toggle-reaction";
+import { Reactions } from "./reactions";
+import { usePanel } from "@/hooks/use-panel";
 
 const formatFullTime = (date: Date) => {
   return `${isToday(date) ? "Today" : isYesterday(date) ? "Yesterday" : format(date, "MMM d, yyyy")} at ${format(date, "hh:mm")}`;
@@ -65,6 +67,8 @@ export const Message = ({
   threadImage,
   threadTimestamp,
 }: Props) => {
+  const { parentMessageId, onOpenMessage, onClose } = usePanel();
+
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure ?",
     "Doing this will remove the message permanently.",
@@ -86,10 +90,10 @@ export const Message = ({
       { messageId: id, value: reaction },
       {
         onSuccess: () => {
-          toast.success("Reaction added");
+          // toast.success("Reaction added");
         },
         onError: () => {
-          toast.error("Failed to add your reaction, please try again.");
+          // toast.error("Failed to add your reaction, please try again.");
         },
       },
     );
@@ -109,6 +113,9 @@ export const Message = ({
           toast.success("Message removed");
 
           // TODO: close thread if exists
+          if (parentMessageId === id) {
+            onClose();
+          }
         },
 
         onError: () => {
@@ -159,7 +166,7 @@ export const Message = ({
                 />
               </div>
             ) : (
-              <div className="flex flex-col w-full translate-x-10">
+              <div className="flex flex-col w-full translate-x-10 overflow-x-auto">
                 <Renderer value={body} />
                 <Thumbnail url={image} />
 
@@ -168,7 +175,7 @@ export const Message = ({
                     (edited)
                   </span>
                 ) : null}
-                {JSON.stringify(reactions)}
+                <Reactions data={reactions} onChange={handleReaction} />
               </div>
             )}
 
@@ -183,7 +190,7 @@ export const Message = ({
               isAuthor={isAuthor}
               isPending={false}
               handleEdit={() => setEditingId(id)}
-              handleThread={() => {}}
+              handleThread={() => onOpenMessage(id)}
               handleDelete={handleRemove}
               handleReaction={handleReaction}
               hideThreadButton={hideThreadButton}
@@ -250,7 +257,7 @@ export const Message = ({
               {updatedAt ? (
                 <span className="text-xs text-muted-foreground">(edited)</span>
               ) : null}
-              {JSON.stringify(reactions)}
+              <Reactions data={reactions} onChange={handleReaction} />
             </div>
           )}
         </div>
@@ -259,7 +266,7 @@ export const Message = ({
             isAuthor={isAuthor}
             isPending={isPending}
             handleEdit={() => setEditingId(id)}
-            handleThread={() => {}}
+            handleThread={() => onOpenMessage(id)}
             handleDelete={handleRemove}
             handleReaction={handleReaction}
             hideThreadButton={hideThreadButton}

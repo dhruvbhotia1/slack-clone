@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono} from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import {ConvexClientProvider} from "@/components/ConvexClientProvider";
+import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import React from "react";
-import {ConvexAuthNextjsServerProvider} from "@convex-dev/auth/nextjs/server"
-import {Modals} from "@/components/modals";
-import {Toaster} from "@/components/ui/sonner";
-import {JotaiProvider} from "@/components/jotai-provider";
+import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
+import { Modals } from "@/components/modals";
+import { Toaster } from "@/components/ui/sonner";
+import { JotaiProvider } from "@/components/jotai-provider";
 import { cn } from "@/lib/utils";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistMono = Geist_Mono({
   variable: "--font-mono",
@@ -28,22 +29,26 @@ export default function RootLayout({
 }>) {
   return (
     <ConvexAuthNextjsServerProvider>
-        <html lang="en" className={cn("antialiased", geistMono.variable, "font-sans", geist.variable)}>
+      <html
+        lang="en"
+        className={cn(
+          "antialiased",
+          geistMono.variable,
+          "font-sans",
+          geist.variable,
+        )}
+        suppressHydrationWarning
+      >
         <body>
-        <ConvexClientProvider>
-
+          <ConvexClientProvider>
             <JotaiProvider>
-
-                <Modals/>
-                <Toaster />
-                {children}
-
+              <Modals />
+              <Toaster />
+              <NuqsAdapter>{children}</NuqsAdapter>
             </JotaiProvider>
-
-
-        </ConvexClientProvider>
+          </ConvexClientProvider>
         </body>
-        </html>
+      </html>
     </ConvexAuthNextjsServerProvider>
   );
 }
