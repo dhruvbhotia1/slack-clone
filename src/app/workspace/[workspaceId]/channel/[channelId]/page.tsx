@@ -4,7 +4,7 @@ import { useChannelId } from "@/hooks/use-channel-id";
 import { useGetChannel } from "@/features/channels/api/use-get-channel";
 import { Loader, TriangleAlert } from "lucide-react";
 import { Header } from "@/app/workspace/[workspaceId]/channel/[channelId]/header";
-import { ChatInput } from "@/app/workspace/[workspaceId]/channel/[channelId]/chat-input";
+import { ChannelChatInput } from "@/app/workspace/[workspaceId]/channel/[channelId]/channel-chat-input";
 import { useGetMessages } from "@/features/messages/api/use-get-messages";
 import { MessageList } from "@/components/message-list";
 
@@ -48,6 +48,7 @@ const Page = () => {
       <Header title={channel?.name} />
 
       <MessageList
+        variant="channel"
         channelName={channel.name}
         channelCreationTime={channel._creationTime}
         data={results}
@@ -56,7 +57,7 @@ const Page = () => {
         canLoadMore={status === "CanLoadMore"}
       />
 
-      <ChatInput placeholder={`Message #${channel.name}`} />
+      <ChannelChatInput placeholder={`Message #${channel.name}`} />
     </div>
   );
 };

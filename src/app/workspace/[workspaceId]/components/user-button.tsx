@@ -51,7 +51,7 @@ export const UserButton = ({ id, label = "Member", image, variant }: Props) => {
           </AvatarFallback>
         </Avatar>
 
-        <span className={"text-sm truncate"}>{label}</span>
+        <span className={"text-sm truncate font-semibold"}>{label}</span>
       </Link>
     </div>
   );

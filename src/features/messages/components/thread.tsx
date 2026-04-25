@@ -231,6 +231,7 @@ export const Thread = ({ messageId, onClose }: Props) => {
                   setEditingId={setEditingId}
                   isCompact={isCompact}
                   hideThreadButton={true}
+                  threadName={message.threadName}
                 />
               );
             })}

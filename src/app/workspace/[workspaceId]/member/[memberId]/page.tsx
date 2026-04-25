@@ -6,21 +6,34 @@ import { useCreateOrGetConversation } from "@/features/conversations/api/use-cre
 import { useEffect } from "react";
 import { AlertTriangle, Loader } from "lucide-react";
 import { useState } from "react";
-import { Doc } from "../../../../../../convex/_generated/dataModel";
+import { Id } from "../../../../../../convex/_generated/dataModel";
+import { toast } from "sonner";
+import { Conversation } from "./conversation";
 const Page = () => {
   const workspaceId = useWorkspaceId();
   const memberId = useMemberId();
 
   const [conversationId, setConversationId] =
-    useState<Doc<"conversations"> | null>(null);
+    useState<Id<"conversations"> | null>(null);
 
   const { data, mutate, isPending } = useCreateOrGetConversation();
 
   useEffect(() => {
-    mutate({
-      workspaceId,
-      memberId,
-    });
+    mutate(
+      {
+        workspaceId,
+        memberId,
+      },
+      {
+        onSuccess: (data) => {
+          setConversationId(data);
+          toast.success("Conversation opened successfully");
+        },
+        onError: () => {
+          toast.error("Failed to create or get conversation");
+        },
+      },
+    );
   }, [memberId, workspaceId, mutate]);
 
   if (isPending) {
@@ -31,10 +44,10 @@ const Page = () => {
     );
   }
 
-  if (!isPending) {
+  if (!conversationId) {
     return (
       <div className="h-full flex items-center justify-center">
-        <AlertTriangle className="size-6 animate-spin text-muted-foreground" />
+        <AlertTriangle className="size-6 text-muted-foreground" />
         <span className="text-sm text-muted-foreground">
           Conversation not found
         </span>
@@ -42,7 +55,7 @@ const Page = () => {
     );
   }
 
-  return <div>member id pages</div>;
+  return <Conversation id={conversationId} />;
 };
 
 export default Page;

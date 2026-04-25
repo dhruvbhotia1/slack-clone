@@ -22,7 +22,7 @@ type CreateMessageValues = {
   image: Id<"_storage"> | undefined;
 };
 
-export const ChatInput = ({ placeholder }: Props) => {
+export const ChannelChatInput = ({ placeholder }: Props) => {
   const [editorKey, setEditorKey] = useState(0);
   const [isPending, setIsPending] = useState(false);
 
