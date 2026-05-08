@@ -13,6 +13,16 @@ import { useRemoveMember } from "../api/use-remove-member";
 import { useCurrentMember } from "../api/use-current-member";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { FaChevronDown } from "react-icons/fa6";
+import { toast } from "sonner";
+import { useConfirm } from "@/hooks/use-confirm";
+import { useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 interface Props {
   memberId: Id<"members">;
   onClose: () => void;
@@ -22,6 +32,22 @@ export const Profile = ({ memberId, onClose }: Props) => {
   const { data: member, isLoading: isMemberLoading } = useGetMember({
     memberId,
   });
+
+  const [LeaveDialog, confirmLeave] = useConfirm(
+    "Leave workspace",
+    "Are you sure? You won't be able to access this workspace without an invite.",
+  );
+
+  const [RemoveDialog, confirmRemove] = useConfirm(
+    "Leave workspace",
+    "Are you sure? This user won't be able to access this workspace without an invite.",
+  );
+
+  const [UpdateDialog, confirmUpdate] = useConfirm(
+    "Change role",
+    "Are you sure? You are about to change this user's role. This action can be reverted later.",
+  );
+
   const workspaceId = useWorkspaceId();
   const { data: currentMember, isLoading: isLoadingCurrentMember } =
     useCurrentMember({
@@ -30,6 +56,68 @@ export const Profile = ({ memberId, onClose }: Props) => {
 
   const { mutate: updateMember, isPending: isUpdating } = useUpdateMember();
   const { mutate: removeMember, isPending: isRemoving } = useRemoveMember();
+
+  const router = useRouter();
+
+  const onRemove = async () => {
+    const ok = await confirmRemove();
+    if (!ok) return;
+
+    removeMember(
+      { id: memberId },
+      {
+        onSuccess: () => {
+          toast.success("Member removed");
+          onClose();
+        },
+
+        onError: () => {
+          toast.error("Failed to remove the member");
+        },
+      },
+    );
+  };
+
+  const onLeave = async () => {
+    const ok = await confirmLeave();
+
+    if (!ok) return;
+
+    removeMember(
+      { id: memberId },
+      {
+        onSuccess: () => {
+          toast.success("You left the workspace");
+          onClose();
+          router.replace("/");
+        },
+
+        onError: () => {
+          toast.error("Failed to leave the workspace");
+        },
+      },
+    );
+  };
+
+  const onUpdate = async (role: "admin" | "member") => {
+    const ok = await confirmUpdate();
+
+    if (!ok) return;
+
+    updateMember(
+      { id: memberId, role },
+      {
+        onSuccess: () => {
+          toast.success("Role changed");
+          onClose();
+        },
+
+        onError: () => {
+          toast.error("Failed to change role");
+        },
+      },
+    );
+  };
 
   if (isMemberLoading || isLoadingCurrentMember) {
     return (
@@ -70,63 +158,96 @@ export const Profile = ({ memberId, onClose }: Props) => {
   const fallback = member.user.name?.[0] ?? "M";
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="flex justify-between items-center px-4 h-12.25 border-b">
-        <p className="text-lg font-bold">Profile</p>
+    <>
+      <RemoveDialog />
+      <LeaveDialog />
+      <UpdateDialog />
+      <div className="h-full flex flex-col">
+        <div className="flex justify-between items-center px-4 h-12.25 border-b">
+          <p className="text-lg font-bold">Profile</p>
 
-        <Button onClick={onClose} size={"iconSm"} variant="ghost">
-          <XIcon className="size-5 stroke-[1.5]" />
-        </Button>
-      </div>
-      <div className="flex flex-col items-center justify-center p-4">
-        <Avatar className="max-w-64 max-h-64 size-full">
-          <AvatarImage src={member.user.image} />
-          <AvatarFallback className="aspect-square text-6xl">
-            {fallback}
-          </AvatarFallback>
-        </Avatar>
-      </div>
-      <div className="flex flex-col p-4">
-        <p className="text-xl font-bold">{member.user.name}</p>
-        {currentMember?.role === "admin" && currentMember?._id !== memberId ? (
-          <div className="flex items-center gap-2 mt-4">
-            <Button className="w-1/2 capitalize" variant="outline">
-              {member.role} <FaChevronDown className="size-4 ml-2" />
-            </Button>
+          <Button onClick={onClose} size={"iconSm"} variant="ghost">
+            <XIcon className="size-5 stroke-[1.5]" />
+          </Button>
+        </div>
+        <div className="flex flex-col items-center justify-center p-4">
+          <Avatar className="max-w-64 max-h-64 size-full">
+            <AvatarImage src={member.user.image} />
+            <AvatarFallback className="aspect-square text-6xl">
+              {fallback}
+            </AvatarFallback>
+          </Avatar>
+        </div>
+        <div className="flex flex-col p-4">
+          <p className="text-xl font-bold">{member.user.name}</p>
+          {currentMember?.role === "admin" &&
+          currentMember?._id !== memberId ? (
+            <div className="flex items-center gap-2 mt-4">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="w-1/2 capitalize" variant="outline">
+                    {member.role} <FaChevronDown className="size-4 ml-2" />
+                  </Button>
+                </DropdownMenuTrigger>
 
-            <Button variant="outline" className="w-1/2 capitalize">
-              Remove
-            </Button>
-          </div>
-        ) : currentMember?._id === memberId &&
-          currentMember?.role !== "admin" ? (
-          <div className="mt-4">
-            <Button className="w-full">Leave</Button>
-          </div>
-        ) : null}
-      </div>
+                <DropdownMenuContent className="w-full">
+                  <DropdownMenuRadioGroup
+                    value={member.role}
+                    onValueChange={(role) =>
+                      onUpdate(role as "admin" | "member")
+                    }
+                  >
+                    <DropdownMenuRadioItem value="admin">
+                      Admin
+                    </DropdownMenuRadioItem>
 
-      <Separator />
-      <div className="flex flex-col p-4">
-        <p className="text-sm font-bold mb-4">Contact information</p>
-        <div className="flex items-center gap-2">
-          <div className="size-9 rounded-md bg-muted flex items-center justify-center">
-            <MailIcon className="size-4" />
-          </div>
-          <div className="flex flex-col">
-            <p className="text-[13px] font-semibold text-muted-foreground">
-              Email Address
-            </p>
+                    <DropdownMenuRadioItem value="member">
+                      Member
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-            <Link
-              href={`mailto: ${member.user.email}`}
-              className="text-sm hover:underline text-[#1264a3]"
-            >
-              {member.user.email}
-            </Link>
+              <Button
+                variant="outline"
+                className="w-1/2 capitalize"
+                onClick={onRemove}
+              >
+                Remove
+              </Button>
+            </div>
+          ) : currentMember?._id === memberId &&
+            currentMember?.role !== "admin" ? (
+            <div className="mt-4">
+              <Button className="w-full" onClick={onLeave}>
+                Leave
+              </Button>
+            </div>
+          ) : null}
+        </div>
+
+        <Separator />
+        <div className="flex flex-col p-4">
+          <p className="text-sm font-bold mb-4">Contact information</p>
+          <div className="flex items-center gap-2">
+            <div className="size-9 rounded-md bg-muted flex items-center justify-center">
+              <MailIcon className="size-4" />
+            </div>
+            <div className="flex flex-col">
+              <p className="text-[13px] font-semibold text-muted-foreground">
+                Email Address
+              </p>
+
+              <Link
+                href={`mailto: ${member.user.email}`}
+                className="text-sm hover:underline text-[#1264a3]"
+              >
+                {member.user.email}
+              </Link>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
